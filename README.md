@@ -4,8 +4,8 @@ This app is to demonstrate how to use $fh.sec APIs in the client side and the cl
 
 $fh.sec API documents:
 
-client: http://docs.feedhenry.com/v2/api_client_hybrid.html#$fh.sec
-cloud: http://docs.feedhenry.com/v2/api_cloud_apis.html#$fh.sec
+* client: http://docs.feedhenry.com/v2/api_client_hybrid.html#$fh.sec
+* cloud: http://docs.feedhenry.com/v2/api_cloud_apis.html#$fh.sec
 
 The app contains three examples: 
 
