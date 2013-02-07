@@ -1,0 +1,16 @@
+<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/aes.js"></script>
+<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/components/enc-base64-min.js"></script>
+<script>
+  //var openSSLEncrypted = "U2FsdGVkX19gazYTc+19JHWIGGHcYxKQeg6itAAgpA//jjHpQRCq6w0C9SEvynFJcD13oCM1Gi3VeOSQFvYACw==";
+    var openSSLEncrypted = "9b196444193be2402e44de2bacd7dad9966bfaaa89ffa747ecdf6d9d39df17f316e15701091f133dc8ea4a177ecd48f2";
+    openSSLEncrypted = CryptoJS.enc.Hex.parse(openSSLEncrypted);
+    openSSLEncrypted = CryptoJS.enc.Base64.stringify(openSSLEncrypted);
+    var key = CryptoJS.enc.Hex.parse('000102030405060708090a0b0c0d0e0f');
+    var iv  = CryptoJS.enc.Hex.parse('101112131415161718191a1b1c1d1e1f');
+    var decrypted = CryptoJS.AES.decrypt(openSSLEncrypted, key, {iv: iv});
+    alert(decrypted.toString(CryptoJS.enc.Utf8));
+
+//var data = "0f87c1d642fa9be643fd888aa5a7b075";
+//var encrypted = CryptoJS.AES.encrypt(data, "somepassphrase");
+//alert(encrypted.ciphertext.toString(CryptoJS.enc.Base64));
+</script>

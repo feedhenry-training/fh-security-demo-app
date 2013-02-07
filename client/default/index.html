@@ -1,0 +1,304 @@
+<!--
+This app has two purposes. One is to test the performance of RSA and AES algorithms on the devices, the other one is to demonstrate how to use
+FeedHenry security apis to transmit sensitive data from the client to the server more securely. 
+
+This app uses jquery mobile as the main UI javascript library. See http://jquerymobile.com/ for demo and more details.
+-->
+
+<!-- Use default jquery mobile javascript library and css. Can be downloaded from jquery mobile website-->
+<script src="jquery.js" type="text/javascript"></script>
+<script src="jqmobile.js" type="text/javascript"></script>
+<link rel="stylesheet" href="jqmobile.css" />
+
+<!-- init javascript functions. will overwrite some of the default jquery mobile settings-->
+<script src="init.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- main css file -->
+<link rel="stylesheet" href="main.css" />
+
+<!-- main javascript functions -->
+<script src="main.js" type="text/javascript" charset="utf-8"></script>
+<script src="benchmark.js" type="text/javascript" charset="utf-8"></script>
+<script src="example_one.js" type="text/javascript" charset="utf-8"></script>
+<script src="example_two.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Start of first page -->
+<div data-role="page">
+  <div data-role="header">
+    <h4>FH Security Api Test</h4>
+  </div>
+  
+  <div data-role="content">
+    <ul data-role="listview" data-inset="true" data-divider-theme="a">
+      <li data-role="list-divider">Options</li>
+      <li> Benchmark
+        <ul data-role="listview" data-inset="true" data-divider-theme="a">
+          <li data-role="list-divider"> Algorithms </li>
+          <li><a href="#rsa_div"> RSA </a></li>
+          <li><a href="#aes_div"> AES </a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#example_div_first">RSA Example</a>
+      </li>
+      <li>
+        <a href="#example_div_second_first_page">RSA&AES Example</a> 
+      </li>
+    </ul>
+  </div>  
+</div>
+<!-- End of first page -->
+
+<!-- Start of the RSA benchmark page -->
+<div id="rsa_div" data-role="page">
+  <div data-role="header">
+    <h4>RSA Benchmark</h4>
+  </div>
+  <div data-role="content">  
+    <div data-role="fieldcontain">
+     <p> To Run the benchmark, please select mode, key size and data size and click "Run".</p>
+     <p> You can also click on "Run All" to run all the combinations. </p>
+     <p> The app may appear freeze when the benchmark is running. Please wait until the process finishes. </p>
+    </div>
+    <div data-role="fieldcontain">
+      <fieldset data-role="controlgroup" data-type="horizontal">
+        <legend>Mode</legend>
+          <input type="radio" name="rsa_mode_choice" id="rsa_mode_choice_enc" value="enc" checked="checked" />
+          <label for="rsa_mode_choice_enc">Encrypt</label>
+      </fieldset>
+    </div>
+
+    <div data-role="fieldcontain">
+      <fieldset data-role="controlgroup" data-type="horizontal">
+        <legend>Keysize (bit)</legend>
+          <!--input type="radio" name="rsa_keysize_choice" id="rsa_keysize_choice_first" value="first" checked="checked" />
+          <label for="rsa_keysize_choice_first">512</label-->
+
+          <input type="radio" name="rsa_keysize_choice" id="rsa_keysize_choice_second" value="second" checked="checked" />
+          <label for="rsa_keysize_choice_second">1024</label>
+
+          <input type="radio" name="rsa_keysize_choice" id="rsa_keysize_choice_third" value="third" />
+          <label for="rsa_keysize_choice_third">2048</label>
+      </fieldset>
+    </div>
+
+    <div data-role="fieldcontain">
+      <fieldset data-role="controlgroup" data-type="horizontal">
+        <legend>Datasize (byte)</legend>
+          <input type="radio" name="rsa_datasize_choice" id="rsa_datasize_choice_first" value="first" checked="checked" />
+          <label for="rsa_datasize_choice_first">16</label>
+
+          <input type="radio" name="rsa_datasize_choice" id="rsa_datasize_choice_second" value="second" />
+          <label for="rsa_datasize_choice_second">32</label>
+
+          <input type="radio" name="rsa_datasize_choice" id="rsa_datasize_choice_third" value="third" />
+          <label for="rsa_datasize_choice_third">64</label>
+      </fieldset>
+    </div>
+
+    <div data-role="controlgroup">
+      <a data-role="button" href="#" id="rsa_run_btn" data-icon="refresh" >Run</a>
+      <a data-role="button" href="#" id="rsa_run_all_btn" data-icon="refresh" >Run All </a>
+      <a data-role="button" href="#" id="rsa_stop_btn" data-icon="delete"> Stop </a>
+    </div>
+   
+    <a href="#" class="progress_btn" data-role="button" id="rsa_progress" data-theme="b">Running...Please wait...</a>
+
+    <a href="#" class="result_btn" data-role="button" id="rsa_result" data-theme="b" data-icon="arrow-r" data-iconpos="right">View Results</a>
+  </div>
+</div>
+<!-- End of the RSA benchmark page -->
+
+<!-- Start of the AES benchmark page -->
+<div id="aes_div" data-role="page">
+  <div data-role="header">
+    <h4>AES Benchmark</h4>
+  </div>
+  <div data-role="content">  
+    <div data-role="fieldcontain">
+     <p> To Run the benchmark, please select mode, key size and data size and click "Run".</p>
+     <p> You can also click on "Run All" to run all the combinations. </p>
+     <p> The app may appear freeze when the benchmark is running. Please wait until the process finishes. </p>
+    </div>
+    
+    <div data-role="fieldcontain">
+      <fieldset data-role="controlgroup" data-type="horizontal">
+        <legend>Mode</legend>
+          <input type="radio" name="aes_mode_choice" id="aes_mode_choice_enc" value="enc" checked="checked" />
+          <label for="aes_mode_choice_enc">Encrypt</label>
+    
+          <input type="radio" name="aes_mode_choice" id="aes_mode_choice_dec" value="dec" />
+          <label for="aes_mode_choice_dec">Decrypt</label>
+      </fieldset>
+    </div>
+
+    <div data-role="fieldcontain">
+      <fieldset data-role="controlgroup" data-type="horizontal">
+        <legend>Keysize (bit)</legend>
+          <input type="radio" name="aes_keysize_choice" id="aes_keysize_choice_first" value="first" checked="checked" />
+          <label for="aes_keysize_choice_first">128</label>
+
+          <input type="radio" name="aes_keysize_choice" id="aes_keysize_choice_second" value="second" />
+          <label for="aes_keysize_choice_second">256</label>
+      </fieldset>
+    </div>
+
+    <div data-role="fieldcontain">
+      <fieldset data-role="controlgroup" data-type="horizontal">
+        <legend>Datasize (byte)</legend>
+          <input type="radio" name="aes_datasize_choice" id="aes_datasize_choice_first" value="first" checked="checked" />
+          <label for="aes_datasize_choice_first">1k</label>
+
+          <input type="radio" name="aes_datasize_choice" id="aes_datasize_choice_second" value="second" />
+          <label for="aes_datasize_choice_second">2k</label>
+
+          <input type="radio" name="aes_datasize_choice" id="aes_datasize_choice_third" value="third" />
+          <label for="aes_datasize_choice_third">3k</label>
+      </fieldset>
+    </div>
+
+    <div data-role="controlgroup">
+      <a data-role="button" href="#" id="aes_run_btn" data-icon="refresh" >Run</a>
+      <a data-role="button" href="#" id="aes_run_all_btn" data-icon="refresh">Run All </a>
+      <a data-role="button" href="#" id="aes_stop_btn" data-icon="delete"> Stop </a>
+    </div>
+
+    <a href="#" class="progress_btn" data-role="button" id="aes_progress" data-theme="b">Running...Please wait...</a>
+
+    <a href="#" class="result_btn" data-role="button" id="aes_result" data-theme="b" data-icon="arrow-r" data-iconpos="right">View Results</a>
+  </div>
+</div>
+<!-- End of the AES benchmark page -->
+
+<!-- Start of benchmark result page  -->
+<div id="result_div" data-role="page">
+  <div data-role="header"> 
+   <h4> Results </h4>
+  </div>
+  <div id="result_page_content" data-role="content">
+    
+  </div>
+</div>
+<!-- End of benchmark result page -->
+
+<!-- Start of the Example 1 page -->
+<div id="example_div_first" data-role="page">
+  <div data-role="header">
+    <h4> RSA Encryption Example </h4>
+  </div>
+  <div data-role="content">
+   <div data-role="fieldcontain">
+    <p> This example will demonstrate how to use FeedHenry security API to encrypt data using RSA public key on the client side and decrypt it on the server side. </p>
+    <p> This can be useful if app needs to send <b>small</b> amount of sensitive data to the server, e.g., credit card details. </p>
+    <p> To run this example, type anything to the input field and click on 'Submit'. You will see some logging  message in the log area. The server will return the decrypted message in plain text. </p>
+   </div>
+   <div data-role="fieldcontain">
+     <label for="example_one_input">Input:</label>
+     <input type="text" name="example_one_input" id="example_one_input" value="Type something here..." />
+   </div>
+  
+   <div data-role="fieldcontain" style="display: block">
+     <a href="#" data-role="button" id="submit_input_btn"> Submit </a>
+   </div>
+  
+   <div data-role="fieldcontain">
+     <a href="#" data-role="button" id="clear_first_log_btn" > Clear Logs </a>
+    
+     <label for="example_one_log"> Logs: </label>
+     <textarea id="example_one_log" name="example_one_log" cols="40" rows="3" readonly="readonly"> </textarea>
+   </div>
+  </div>
+</div>
+<!-- End of the Example 1 page -->
+
+<!-- Start of the Example 2 page 1 -->
+<div id="example_div_second_first_page" data-role="page">
+  <div data-role="header">
+    <h4>RSA&AES Example</h4>
+  </div>
+  <div data-role="content">
+    <div data-role="fieldcontain"> 
+     <p> This example will demonstrate how to use FeedHenry security API to generate secret key on the client, exchange the secret key using server's public key and finally implement two-way communication using the shared secret key to encrypt/decrypt data on both sides.  </p>
+     <p> This can be useful if the app needs to exchange series of sensitive data with the server, e.g., online banking. </p>
+     <p> To run this example, click on the 'Login' button and see the logs. You can click on the 'Next' button to go to next page. </p>
+    </div>
+    <div data-role="fieldcontain">
+      <label for="user_name"> User Name </label>
+      <input type="text" name="user_name" id="user_name" value="John.Doe@example.com" />
+      
+      <label for="user_pass"> Password </label>
+      <input type="password" name="user_pass" id="user_pass" value="password" />
+  
+      <a href="#" data-role="button" id="login_btn"> Login </a>
+
+       <div data-role="fieldcontain">
+     <a href="#" data-role="button" id="get_secret_key_enc"> Get Secret Key & Encrypt</a>
+   </div>
+
+   <div data-role="fieldcontain">
+     <a href="#" data-role="button" id="get_secret_key_dec"> Get Secret Key & Decrypt</a>
+   </div>
+    </div>
+    
+    <div data-role="fieldcontain">
+      <a href="#" class="hidden" data-role="button" id="example_two_next_one" > Next </a>
+    </div>
+  
+    <div data-role="fieldcontain">
+      <a href="#" data-role="button" id="clear_two_log_btn_one" > Clear Logs </a>
+    
+      <label for="example_two_log_one"> Logs: </label>
+      <textarea id="example_two_log_one" name="example_two_log_one" cols="40" rows="3" readonly="readonly"> </textarea>
+    </div>
+    
+  </div>
+</div>
+<!-- End of the Example 2 page 1 -->
+
+<!-- Start of the Example 2 page 2 -->
+<div id="example_div_second_second_page" data-role="page">
+  <div data-role="header">
+    <h4>You Bank Details</h4>
+  </div>
+  <div data-role="content">
+    <div data-role="fieldcontain">
+      <a href="#" data-role="button" id="view_balance_btn" data-theme="b" data-icon="arrow-r" data-iconpos="right">View My Balance</a>
+      <a href="#" data-role="button" id="view_trans_btn" data-theme="b" data-icon="arrow-r" data-iconpos="right">View My Transactions</a>
+    </div>
+
+    <div data-role="fieldcontain">
+      <a href="#" class="hidden" data-role="button" id="example_two_next_two" > Next </a>
+    </div>
+  
+    <div data-role="fieldcontain">
+      <a href="#" data-role="button" id="clear_two_log_btn_two" > Clear Logs </a>
+  
+      <label for="example_two_log_two"> Logs: </label>
+      <textarea id="example_two_log_two" name="example_two_log_two" cols="40" rows="3" readonly="readonly"> </textarea>    
+    </div>
+  
+  </div>
+</div>
+<!-- End of the Example 2 page 2 -->
+
+<!-- Start of the Example 2 page 3 -->
+<div id="example_div_second_third_page" data-role="page">
+  <div data-role="header">
+    <h4>Balance</h4>
+  </div>
+  <div id="balance_details" data-role="content">
+  
+  </div>
+</div>
+<!-- End of the Example 2 page 3 -->
+
+<!-- Start of the Example 2 page 4 -->
+<div id="example_div_second_fourth_page" data-role="page">
+  <div data-role="header">
+    <h4>Transactions</h4>
+  </div>
+  <div id="trans_details" data-role="content">
+    
+  </div>
+</div>
+<!-- End of the Example 2 page 4 -->

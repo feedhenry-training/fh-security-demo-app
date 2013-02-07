@@ -1,0 +1,14 @@
+body {
+ background-color: #F0F0F0; 
+}
+
+textarea{
+ color: #000000 !important;
+ opacity: 1 !important; 
+ height: 100% !important;
+}
+
+
+.progress_btn,.result_btn, .hidden {
+ display: none; 
+}
