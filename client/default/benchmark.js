@@ -115,7 +115,7 @@ function do_benchmark(alg, key, data, keysize, do_decrypt, callback, iv){
     }
     //decryption is aes only
     if(do_decrypt){
-      var decrypt_params = {ciphertext: cipher.ciphertext, key: key.secretkey, algorithm : 'AES', iv: iv};
+      var decrypt_params = {ciphertext: cipher.ciphertext, key: key, algorithm : 'AES', iv: iv};
       timer_start(alg + " decryption. dl = " + data.length + " :: kl = " + keysize, {datasize: data.length, keysize: keysize});
       $fh.sec({act:'decrypt', params:decrypt_params}, function(plaintext){
         timer_end(alg + " decryption. dl = " + data.length + " :: kl = " + keysize);
