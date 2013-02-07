@@ -98,7 +98,7 @@ function do_benchmark(alg, key, data, keysize, do_decrypt, callback, iv){
   //prepare the parameters for encryption/decryption
   var params = {plaintext : data, algorithm: alg};
   if(alg.toLowerCase() == "aes"){
-    params.key = key.secretkey;
+    params.key = key;
     params.iv = iv;
   } else {
     params.key = key.e;
