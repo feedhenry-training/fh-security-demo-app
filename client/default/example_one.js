@@ -12,7 +12,7 @@ function doInputSubmit(){
   if(null == _public_key){
     log('No public key found, get one from server...');
     $fh.act({ act :'getPublicKey', secure: _use_secure, req:{}}, function(res){
-      log('Got publick key...');
+      log('Got public key...');
       _public_key = res;
       encryptAndSubmit();
     })

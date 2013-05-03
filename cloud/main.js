@@ -133,7 +133,7 @@ exports.decryptInput = function(params, callback){
 exports.exchangeSecretKey = function(params, callback){
   var keyid = getKeyId(params);
   var encrypt_key = params.cipher;  //get the RSA public encrypted secret key
-  var nuance = params.nuance;   //for vevification
+  var nonce = params.nonce;   //for vevification
   var keysize = parseInt(params.keysize);
   getKey(keyid, "private", function(err, keyvalue){
     if(err) return callback(err);
@@ -143,7 +143,7 @@ exports.exchangeSecretKey = function(params, callback){
       var secretkey = JSON.parse(plaintext.plaintext);
       var secret_key = secretkey.key;
       var iv = secretkey.iv;
-      $fh.sec({act:'hash', params:{algorithm:'MD5', text: nuance}}, function(err, hashvalue){
+      $fh.sec({act:'hash', params:{algorithm:'MD5', text: nonce}}, function(err, hashvalue){
         if(err) return callback(err);
         var hv = hashvalue.hashvalue;
         console.log('hash value is ' + hv);

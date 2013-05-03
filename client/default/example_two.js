@@ -60,24 +60,24 @@ function exchangeSecretKey(cb){
     cb();
   }else{
     log('Going to exchange the secret key with the server...');
-    log('Generate a random nuance for verfication...');
-    var nuance = generate_random_text(24);
-    log('A random nuance has been generated.');
+    log('Generate a random nonce for verfication...');
+    var nonce = generate_random_text(24);
+    log('A random nonce has been generated.');
     log('Encrypt the secret key with server\'s public key...');
     $fh.sec({act:'encrypt', params:{algorithm:"RSA", plaintext: JSON.stringify({key: _secret_key, iv:_initial_iv}), modulu: _public_key.modulu}}, 
       function(cipher){
         log('Secret key has been encrypted. Send it to the server...');
-        var exchange_data = {'cipher': cipher.ciphertext, 'nuance': nuance, 'keysize': 128};
+        var exchange_data = {'cipher': cipher.ciphertext, 'nonce': nonce, 'keysize': 128};
         $fh.act({act:'exchangeSecretKey', secure: _use_secure, req:exchange_data}, function(response){
           log('Server got the encrypted secret key. Verify the server response to make sure it\'s correct...');
           var encrypt_hash_value = response.verify;
           log("verification value is " + encrypt_hash_value);
           log('To verify, decrypt the server reponse with the secret key...');
           $fh.sec({act:'decrypt', params:{algorithm:'AES', ciphertext: encrypt_hash_value, key: _secret_key, iv: _initial_iv}}, function(decrypt_data){
-            log('Decryption complete. Compare it with the md5 hash value of the nuance, it should be the same.');
+            log('Decryption complete. Compare it with the md5 hash value of the nonce, it should be the same.');
             var hash_value = decrypt_data.plaintext;
             log("remote hash value is " + hash_value);
-            $fh.sec({act:'hash', params:{algorithm:'MD5', text: nuance}}, function(local_hash){
+            $fh.sec({act:'hash', params:{algorithm:'MD5', text: nonce}}, function(local_hash){
               log("local hash value is " + local_hash.hashvalue);
               if(hash_value == local_hash.hashvalue){
                 log('Hash values are the same. Secret key has been verified. Secret key exchange completed.');
