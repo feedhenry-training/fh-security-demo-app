@@ -132,7 +132,7 @@ exports.getPublicKey = function(params, callback) {
 exports.decryptInput = function(params, callback){
   var encrypt_data = params.details;
   var keyid = getKeyId(params);
-  console.log('decryptInput - keyId = ' + keyId);
+  console.log('decryptInput - keyId = ' + keyid);
   getKey(keyid, "private", function(err, keyvalue){
     console.log('decryptInput - getKey : (err, keyvalue)', err, ' :: ', keyvalue);
     if(err) return callback(err);
