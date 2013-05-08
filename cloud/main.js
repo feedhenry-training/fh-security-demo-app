@@ -98,7 +98,7 @@ exports.getPublicKey = function(params, callback) {
   var keyid = getKeyId(params);
   console.log('getPublicKey - keyId = ' + keyid);
   getKey(keyid, "public", function(err, pubkey){
-    console.log('getPublicKey - getKey public : (err, keyvalue)', err, ' :: ', keyvalue);
+    console.log('getPublicKey - getKey public : (err, keyvalue)', err, ' :: ', pubkey);
     
     if(err){
       return callback(err);
