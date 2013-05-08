@@ -10,7 +10,7 @@ var getKeyId = function(params){
   var appid = params.__fh.appid;
   var keyid = cuid + "_" + appid;
   return keyid;
-}
+};
 
 //read a key using $fh.db
 var getKey = function(id, keytype, cb){
@@ -34,10 +34,11 @@ var getKey = function(id, keytype, cb){
     console.log("$fh.db not defined");
     cb("$fh.db not defined");
   }
-}
+};
 
 //save a key using $fh.db
 var saveKey = function(id, keytype, keyvalue, cb){
+  console.log('saveKey id=', id, ' : keytype=', keytype, ' : keyvalue=', keyvalue);
   if(typeof $fh !== "undefined" && $fh.db){
     //first check if a key with the same id and type already exsists
     $fh.db({
@@ -48,6 +49,8 @@ var saveKey = function(id, keytype, keyvalue, cb){
         "keyType": keytype
       }
     }, function(err, data){
+      console.log('saveKey - list securityKeys (err, data) ', err, ' : ', data);
+
       if(err) return cb(err);
       //a key with the same id and type already exists, update it
       if(data.count > 0){
@@ -61,9 +64,11 @@ var saveKey = function(id, keytype, keyvalue, cb){
             'keyValue' : keyvalue
           }
         }, function(err, result){
+          console.log('saveKey - update securityKeys (err, data) ', err, ' : ', data);
+
           if(err) return cb(err);
           return cb(undefined, result);
-        })
+        });
       } else {
         //a key with the same id and type is not found, create it
         $fh.db({
@@ -75,6 +80,8 @@ var saveKey = function(id, keytype, keyvalue, cb){
             'keyValue': keyvalue
           }
         }, function(err, result){
+          console.log('saveKey - create securityKeys (err, data) ', err, ' : ', data);
+
           if(err) return cb(err);
           return cb(undefined, result);
         });
@@ -84,50 +91,58 @@ var saveKey = function(id, keytype, keyvalue, cb){
     console.log("$fh.db not defined");
     cb("$fh.db not defined");
   }
-}
+};
 
 //read the public key for the request if it exists, otherwise generate a new pair and save it
 exports.getPublicKey = function(params, callback) {
   var keyid = getKeyId(params);
-
+  console.log('getPublicKey - keyId = ' + keyId);
   getKey(keyid, "public", function(err, pubkey){
+    console.log('getPublicKey - getKey public : (err, keyvalue)', err, ' :: ', keyvalue);
+    
     if(err){
       return callback(err);
     }
     if(pubkey){
       getKey(keyid, "modulu", function(err, modulu){
+        console.log('getPublicKey - getKey modulu : (err, modulu)', err, ' :: ', modulu);
+
         if(err) return callback(err);
-        return callback(undefined, {modulu: modulu, public: pubkey});
-      })
+        return callback(undefined, {'modulu': modulu, 'public': pubkey});
+      });
     } else {
       $fh.sec({act:'keygen', params: {algorithm:'RSA', keysize: KEY_SIZE}}, function(err, keys){
+        console.log('getPublicKey - sec keygen : (err, keys)', err, ' :: ', keys);
+
         if(err) return callback(err);
         if(keys){
-          saveKey(keyid, "public", keys.public, function(){});
-          saveKey(keyid, "private", keys.private, function(){});
+          saveKey(keyid, "public", keys['public'], function(){});
+          saveKey(keyid, "private", keys['private'], function(){});
           saveKey(keyid, "modulu", keys.modulu, function(){});
-          return callback(undefined, {key: keys.public, modulu: keys.modulu, keysize: KEY_SIZE});
+          return callback(undefined, {key: keys['public'], modulu: keys.modulu, keysize: KEY_SIZE});
         } else {
           return callback("Key generation failed");
         }
       });
     }
   });
-}
+};
 
 //decrypt data using RSA
 exports.decryptInput = function(params, callback){
   var encrypt_data = params.details;
   var keyid = getKeyId(params);
+  console.log('decryptInput - keyId = ' + keyId);
   getKey(keyid, "private", function(err, keyvalue){
+    console.log('decryptInput - getKey : (err, keyvalue)', err, ' :: ', keyvalue);
     if(err) return callback(err);
-    $fh.sec({act:'decrypt', params:{algorithm:'RSA', ciphertext:encrypt_data, private:keyvalue}}, function(err, plaintext){
+    $fh.sec({act:'decrypt', params:{'algorithm':'RSA', 'ciphertext':encrypt_data, 'private':keyvalue}}, function(err, plaintext){
       if(err) return callback(err);
       console.log("Received data is : " + plaintext.plaintext);
       return callback(undefined, {result:'ok', message: plaintext.plaintext});
     });
   });
-}
+};
 
 //decrypt the data to get the secret key sent by the client, and return verification value
 exports.exchangeSecretKey = function(params, callback){
@@ -137,7 +152,7 @@ exports.exchangeSecretKey = function(params, callback){
   var keysize = parseInt(params.keysize);
   getKey(keyid, "private", function(err, keyvalue){
     if(err) return callback(err);
-    $fh.sec({act:'decrypt', params:{algorithm:'RSA', ciphertext:encrypt_key, private:keyvalue}}, function(err, plaintext){
+    $fh.sec({act:'decrypt', params:{'algorithm':'RSA', 'ciphertext':encrypt_key, 'private':keyvalue}}, function(err, plaintext){
       if(err) return callback(err);
       console.log('Secret key is ' + plaintext.plaintext);
       var secretkey = JSON.parse(plaintext.plaintext);
@@ -155,11 +170,11 @@ exports.exchangeSecretKey = function(params, callback){
             if(err) return callback(err);
             return callback(undefined, {verify: ciphertext.ciphertext, __session_id: sessionId});
           });
-        })
+        });
       });
     });
   });
-}
+};
 
 exports.generateSecretKey = function(params, callback){
   var keyid = getKeyId(params);
@@ -177,7 +192,7 @@ exports.generateSecretKey = function(params, callback){
       });
     }
   });
-}
+};
 
 exports.userLogin = function(params, callback){
   receiveSecureData(params, function(err, data){
@@ -188,8 +203,7 @@ exports.userLogin = function(params, callback){
     var retdata = { result: 'ok', uid : 1};
     sendSecureData(data.key, retdata, callback);
   });
-  
-}
+};
 
 exports.checkBalance = function(params, callback){
   receiveSecureData(params, function(err, data){
@@ -200,8 +214,7 @@ exports.checkBalance = function(params, callback){
     var retdata = {balances: balances};
     sendSecureData(data.key, retdata, callback);
   });
-  
-}
+};
 
 exports.listTransactions = function(params, callback){
   receiveSecureData(params, function(err, data){
@@ -212,7 +225,7 @@ exports.listTransactions = function(params, callback){
     var retdata = { transactions: trans};
     sendSecureData(data.key, retdata, callback);
   });
-}
+};
 
 
 //decrypt the data which has been eccrypted using the shared secret key
@@ -229,7 +242,7 @@ function receiveSecureData(params, callback){
         if(err) return callback(err);
         console.log("Received data is " + plaintext.plaintext);
         return callback(undefined, {key: secret_key, data: JSON.parse(plaintext.plaintext)});
-      })
+      });
     } else {
       return callback("no secret key found");
     }
