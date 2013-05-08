@@ -96,7 +96,7 @@ var saveKey = function(id, keytype, keyvalue, cb){
 //read the public key for the request if it exists, otherwise generate a new pair and save it
 exports.getPublicKey = function(params, callback) {
   var keyid = getKeyId(params);
-  console.log('getPublicKey - keyId = ' + keyId);
+  console.log('getPublicKey - keyId = ' + keyid);
   getKey(keyid, "public", function(err, pubkey){
     console.log('getPublicKey - getKey public : (err, keyvalue)', err, ' :: ', keyvalue);
     
